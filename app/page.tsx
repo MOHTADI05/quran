@@ -19,19 +19,7 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <Link
-            href="/pdf"
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-green-500 hover:border-green-600"
-          >
-            <h2 className="text-2xl font-bold mb-2 text-green-600 dark:text-green-400">
-              📖 قراءة PDF
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              قراءة المصحف بصيغة PDF مع التنقل بين الصفحات
-            </p>
-          </Link>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <Link
             href="/surahs"
             className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-blue-500 hover:border-blue-600"
