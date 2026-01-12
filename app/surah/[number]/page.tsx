@@ -5,6 +5,8 @@ import { fetchAyahsForSurah } from '@/lib/quran-api'
 import Navbar from '@/components/Navbar'
 import MindMapSection from '@/components/MindMapSection'
 import AyahsDisplay from '@/components/AyahsDisplay'
+import VoiceRecognition from '@/components/VoiceRecognition'
+import SurahNavigation from '@/components/SurahNavigation'
 
 interface PageProps {
   params: {
@@ -29,6 +31,7 @@ export default async function SurahPage({ params }: PageProps) {
   return (
     <>
       <Navbar />
+      <SurahNavigation />
       <main className="min-h-screen p-8">
         <div className="max-w-5xl mx-auto">
           <Link
@@ -69,16 +72,74 @@ export default async function SurahPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold mb-6 text-center text-green-600 dark:text-green-400">
-              الخريطة الذهنية للسورة
+          <div id="mindmap" className="mb-8 scroll-mt-24">
+            <h2 className="text-4xl font-bold mb-12 text-center text-green-600 dark:text-green-400">
+              🗺️ الخريطة الذهنية للسورة
             </h2>
-            {surah.mindMap.map((section, index) => (
-              <MindMapSection key={index} section={section} index={index + 1} />
-            ))}
+            
+            {/* Central Node - Main Theme */}
+            <div className="relative mb-20">
+              <div className="flex justify-center">
+                <div className="relative group">
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-green-400 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
+                  
+                  {/* Central Circle */}
+                  <div className="relative bg-gradient-to-br from-green-500 via-emerald-500 to-green-600 text-white rounded-full w-40 h-40 flex flex-col items-center justify-center shadow-2xl border-4 border-white dark:border-gray-800 transform hover:scale-110 transition-transform duration-300 z-20">
+                    <div className="text-4xl font-bold mb-2">{surah.nameArabic}</div>
+                    <div className="text-xs opacity-90 bg-white/20 px-3 py-1 rounded-full">المحور العام</div>
+                  </div>
+                  
+                  {/* Connection points around center */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {surah.mindMap.map((_, index) => {
+                      const angle = (index / surah.mindMap.length) * 2 * Math.PI - Math.PI / 2
+                      const radius = 100
+                      const x = Math.cos(angle) * radius
+                      const y = Math.sin(angle) * radius
+                      
+                      return (
+                        <div
+                          key={index}
+                          className="absolute w-3 h-3 bg-green-400 rounded-full border-2 border-white dark:border-gray-800"
+                          style={{
+                            transform: `translate(${x}px, ${y}px)`,
+                          }}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mind Map Sections */}
+            <div className="space-y-4">
+              {surah.mindMap.map((section, index) => (
+                <MindMapSection
+                  key={index}
+                  section={section}
+                  index={index + 1}
+                  totalSections={surah.mindMap.length}
+                />
+              ))}
+            </div>
           </div>
 
-          <AyahsDisplay ayahs={ayahs} surahNumber={surahNumber} />
+          <div id="ayahs" className="scroll-mt-24">
+            <AyahsDisplay ayahs={ayahs} surahNumber={surahNumber} />
+          </div>
+
+          {ayahs && ayahs.length > 0 && (
+            <div id="recitation" className="scroll-mt-24">
+              <VoiceRecognition
+                ayahs={ayahs}
+                surahNumber={surahNumber}
+                surahName={surah.name}
+                surahNameArabic={surah.nameArabic}
+              />
+            </div>
+          )}
 
           {surah.virtues && surah.virtues.length > 0 && (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-6 shadow-md border-r-4 border-yellow-500">
